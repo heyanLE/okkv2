@@ -32,13 +32,15 @@ android {
     }
 }
 
-publishing {
-    publications {
-        create("maven_public", MavenPublication::class) {
-            groupId = "com.heyanle"
-            artifactId = "okkv2-core"
-            version = "1.1"
-            from(components.getByName("release"))
+afterEvaluate {
+    publishing {
+        publications {
+            create("maven_public", MavenPublication::class) {
+                groupId = "com.heyanle"
+                artifactId = "okkv2-sp"
+                version = "1.1"
+                from(components.getByName("release"))
+            }
         }
     }
 }
@@ -48,8 +50,3 @@ dependencies {
     api(project(":okkv2-core"))
 }
 
-repositories {
-    google()
-    mavenCentral()
-    maven { url = uri("https://jitpack.io") }
-}

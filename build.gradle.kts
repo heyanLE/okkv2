@@ -1,22 +1,8 @@
-group = "com.heyanle"
-version = "1.0-SNAPSHOT"
 
-repositories {
-    google()
-    mavenCentral()
-    maven { url = uri("https://jitpack.io") }
-}
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
-        maven { url = uri("https://jitpack.io") }
-    }
-    dependencies {
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.21")
-        classpath ("com.github.dcendents:android-maven-gradle-plugin:1.4.1")
-        classpath ("com.android.tools.build:gradle:7.1.3")
-    }
+plugins {
+    id ("com.android.application") version "7.2.0" apply false
+    id ("com.android.library") version "7.2.0" apply false
+    id ("org.jetbrains.kotlin.android") version "1.6.10" apply false
 }
 
 

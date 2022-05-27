@@ -25,32 +25,21 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+}
+afterEvaluate {
     publishing {
-        singleVariant("release") {
-            withSourcesJar()
+        publications {
+            create("maven_public", MavenPublication::class) {
+                groupId = "com.heyanle"
+                artifactId = "okkv2-mmkv"
+                version = "1.1"
+                from(components.getByName("release"))
+            }
         }
     }
 }
-
-publishing {
-    publications {
-        create("maven_public", MavenPublication::class) {
-            groupId = "com.heyanle"
-            artifactId = "okkv2-core"
-            version = "1.1"
-            from(components.getByName("release"))
-        }
-    }
-}
-
 
 dependencies {
     api("com.tencent:mmkv:1.2.13")
     api(project(":okkv2-core"))
-}
-
-repositories {
-    google()
-    mavenCentral()
-    maven { url = uri("https://jitpack.io") }
 }

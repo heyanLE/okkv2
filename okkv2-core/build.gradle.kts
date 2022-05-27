@@ -8,9 +8,6 @@ plugins {
 group = "com.heyanle"
 version = "1.0-SNAPSHOT"
 
-repositories {
-    mavenCentral()
-}
 
 dependencies {
 
@@ -19,6 +16,7 @@ dependencies {
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
 }
+
 
 publishing {
     publications {
