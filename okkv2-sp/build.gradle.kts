@@ -29,7 +29,6 @@ android {
 
 
 dependencies {
-    implementation("androidx.core:core-ktx:1.7.0")
     api(project(":okkv2-core"))
 }
 

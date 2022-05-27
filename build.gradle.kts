@@ -2,7 +2,9 @@ group = "com.heyanle"
 version = "1.0-SNAPSHOT"
 
 repositories {
+    google()
     mavenCentral()
+    maven { url = uri("https://jitpack.io") }
 }
 buildscript {
     repositories {

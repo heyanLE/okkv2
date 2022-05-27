@@ -28,7 +28,6 @@ android {
 }
 
 dependencies {
-    implementation("androidx.core:core-ktx:1.7.0")
     api("com.tencent:mmkv:1.2.13")
     api(project(":okkv2-core"))
 }
