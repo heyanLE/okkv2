@@ -2,7 +2,7 @@
 
 [![](https://jitpack.io/v/heyanLE/okkv2.svg)](https://jitpack.io/#heyanLE/okkv2)
 
-[使用文档点击这里](https://github.com/heyanLE/okkv2/doc/menu.md)
+[使用文档点击这里](https://github.com/heyanLE/okkv2/tree/main/doc/menu.md)
 
 * 1.0.7 2022/05/27  
 支持自定义 Store 支持的类型  

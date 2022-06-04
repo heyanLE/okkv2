@@ -52,18 +52,22 @@ dependencyResolutionManagement {
 
 ##### 在 module 中加入依赖：
 
+[![](https://jitpack.io/v/heyanLE/okkv2.svg)](https://jitpack.io/#heyanLE/okkv2)
+
+版本请更换为以上最新版本
+
 groovy:
 
 ```groovy
-implementation 'com.github.heyanLE.okkv2:okkv2-core:1.0.8'
-implementation 'com.github.heyanLE.okkv2:okkv2-mmkv:1.0.8' // 使用 mmkv 储存
-implementation 'com.github.heyanLE.okkv2:okkv2-sp:1.0.8' // 使用 sharedPreferences 储存
+implementation 'com.github.heyanLE.okkv2:okkv2-core:1.0.9'
+implementation 'com.github.heyanLE.okkv2:okkv2-mmkv:1.0.9' // 使用 mmkv 储存
+implementation 'com.github.heyanLE.okkv2:okkv2-sp:1.0.9' // 使用 sharedPreferences 储存
 ```
 
 kotlin:
 
 ```kotlin
-implementation("com.github.heyanLE.okkv2:okkv2-core:1.0.8")
-implementation("com.github.heyanLE.okkv2:okkv2-mmkv:1.0.8") // 使用 mmkv 储存
-implementation("com.github.heyanLE.okkv2:okkv2-sp:1.0.8") // 使用 sharedPreferences 储存
+implementation("com.github.heyanLE.okkv2:okkv2-core:1.0.9")
+implementation("com.github.heyanLE.okkv2:okkv2-mmkv:1.0.9") // 使用 mmkv 储存
+implementation("com.github.heyanLE.okkv2:okkv2-sp:1.0.9") // 使用 sharedPreferences 储存
 ```
