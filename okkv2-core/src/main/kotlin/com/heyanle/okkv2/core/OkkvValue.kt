@@ -21,6 +21,10 @@ interface OkkvValue<T: Any> {
 
     fun get(): T?
 
+    fun require(): T {
+        return get() ?: throw NullPointerException("get() return null")
+    }
+
     fun set(value: T?)
 
     fun ignoreException():Boolean?

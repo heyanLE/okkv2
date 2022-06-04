@@ -1,14 +1,34 @@
-package com.heyanle.okkv2.core.store
+### OKKV2 使用文档
 
-import java.util.Collections
+[返回目录](./menu.md)
 
-/**
- * Created by HeYanLe on 2022/5/27 16:01.
- * https://github.com/heyanLE
- */
+#### 自定义 Store
+
+可以继承 Store 或继承 SimpleStore 实现：
+
+```kotlin
+interface Store {
+
+    // 是否可以存储该类型
+    fun canStore(clazz: Class<*>): Boolean
+
+    // 初始化
+    fun init()
+
+    // getter 和 setter 与对应类型
+    fun <T: Any> get(key: String, clazz: Class<T>) : T?
+    fun <T: Any> set(key: String, clazz: Class<T>, value: T?)
+
+    // 删除（存储 null）
+    fun remove(key: String)
+}
+```
+
+```kotlin
 abstract class SimpleStore: Store {
 
     companion object {
+        // 可存储基本数据类型，包括 java 与 kotlin 中的类型
         private val STORABLE_SET = setOf(
             String::class.java,
             Double::class.java,
@@ -52,6 +72,7 @@ abstract class SimpleStore: Store {
         }as T?
     }
 
+    // 主要实现的抽象方法
 
     abstract fun getString(key: String) : String?
     abstract fun getDouble(key: String) : Double?
@@ -67,3 +88,4 @@ abstract class SimpleStore: Store {
     abstract fun setFloat(key: String, value: Float?)
     abstract fun setBoolean(key: String, value: Boolean?)
 }
+```

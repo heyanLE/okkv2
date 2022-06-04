@@ -105,6 +105,11 @@ interface Okkv {
             return this
         }
 
+        fun catchingChain(catchingInterceptor: CatchingInterceptor): Builder{
+            catchingChain = catchingInterceptor
+            return this
+        }
+
         fun cache(boolean: Boolean):Builder{
             cache = boolean
             return this
