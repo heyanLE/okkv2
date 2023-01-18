@@ -33,6 +33,5 @@ afterEvaluate {
 
 dependencies {
     implementation("androidx.compose.runtime:runtime:1.3.3")
-    implementation("androidx.compose.runtime:runtime-livedata:1.3.3")
     api(project(":okkv2-core"))
 }
