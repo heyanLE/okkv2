@@ -28,6 +28,9 @@ afterEvaluate {
     publishing {
         publications {
             create("maven_public", MavenPublication::class) {
+                groupId = "com.heyanle"
+                artifactId = "okkv2-compose"
+                version = "1.2"
                 from(components.getByName("release"))
             }
         }

@@ -17,7 +17,7 @@ publishing {
         create("maven_public", MavenPublication::class) {
             groupId = "com.heyanle"
             artifactId = "okkv2-core"
-            version = "1.1"
+            version = "1.2"
             from(components.getByName("java"))
         }
     }
