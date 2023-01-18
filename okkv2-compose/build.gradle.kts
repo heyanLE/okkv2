@@ -1,3 +1,4 @@
+@file:Suppress("UnstableApiUsage")
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
@@ -11,7 +12,9 @@ android {
     defaultConfig {
         minSdk = 21
     }
-
+    buildFeatures {
+        compose = true
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
