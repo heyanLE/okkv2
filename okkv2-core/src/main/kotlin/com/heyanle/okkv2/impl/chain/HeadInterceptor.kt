@@ -9,7 +9,7 @@ import com.heyanle.okkv2.core.chain.Interceptor
  */
 class HeadInterceptor : Interceptor() {
     override fun <T : Any> get(okkvValue: OkkvValue<T>): T? {
-        return next?.next?.get(okkvValue)
+        return next?.get(okkvValue)
             ?: if (okkvValue.nullable()) {
                 null
             } else {
@@ -18,6 +18,6 @@ class HeadInterceptor : Interceptor() {
     }
 
     override fun <T : Any> set(okkvValue: OkkvValue<T>, value: T?) {
-        next?.next?.set(okkvValue, value)
+        next?.set(okkvValue, value)
     }
 }

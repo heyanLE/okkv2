@@ -5,7 +5,6 @@ import com.heyanle.okkv2.core.chain.InterceptorChain
 import com.heyanle.okkv2.core.store.Store
 import java.util.Collections
 import java.util.concurrent.locks.ReentrantReadWriteLock
-import kotlin.Exception
 import kotlin.concurrent.read
 import kotlin.concurrent.write
 
@@ -18,14 +17,16 @@ class OkkvImpl(
     private val store: Store,
     converter: List<Converter<*, *>>,
     private val ignoreException: Boolean,
-): Okkv {
+) : Okkv {
 
-    private val map :Map<Class<*>, List<Converter<Any, Any>>>
+    private val map: Map<Class<*>, List<Converter<Any, Any>>>
 
     init {
         val m = HashMap<Class<*>, ArrayList<Converter<Any, Any>>>()
         converter.forEach {
-            m[it.tClazz()] = m.getOrDefault(it.tClazz(), arrayListOf()).apply {
+            val getOrNew = m[it.tClazz()] ?: arrayListOf()
+            m[it.tClazz()] = getOrNew.apply {
+                @Suppress("UNCHECKED_CAST")
                 add(it as Converter<Any, Any>)
             }
         }
@@ -34,61 +35,52 @@ class OkkvImpl(
             ma[t] = Collections.unmodifiableList(u)
         }
         map = Collections.unmodifiableMap(ma)
-
     }
 
-    override fun init(): Okkv {
+    override fun init() = apply {
         store.init()
-        return this
     }
 
-    override fun <T : Any> getValue(value: OkkvValue<T>): T? {
-        return okkvChain.get(value)
-    }
+    override fun <T : Any> getValue(value: OkkvValue<T>): T? = okkvChain.get(value)
 
-    override fun <T : Any> setValue(value: OkkvValue<T>, v: T?){
-        okkvChain.set(value, v)
-    }
+    override fun <T : Any> setValue(value: OkkvValue<T>, v: T?) = okkvChain.set(value, v)
 
     private val hashMap = HashMap<Class<*>, List<Converter<Any, Any>>>()
     private val lock = ReentrantReadWriteLock()
 
 
     override fun <T : Any> covertFrom(clazz: Class<T>): List<Converter<Any, Any>> {
-        var res : List<Converter<Any, Any>>? = null
+        var res: List<Converter<Any, Any>>? = null
         lock.read {
-            if(hashMap.containsKey(clazz)){
-                res =  hashMap[clazz]
+            if (hashMap.containsKey(clazz)) {
+                res = hashMap[clazz]
             }
         }
-        if(res == null){
+        if (res == null) {
             findCovert(clazz)
         }
         lock.read {
-            if(hashMap.containsKey(clazz)){
-                res =  hashMap[clazz]
+            if (hashMap.containsKey(clazz)) {
+                res = hashMap[clazz]
             }
         }
-        return res?: emptyList()
+        return res ?: emptyList()
     }
 
-    override fun canStore(clazz: Class<*>): Boolean {
-        return store.canStore(clazz)
-    }
+    override fun canStore(clazz: Class<*>): Boolean = store.canStore(clazz)
 
-    private fun findCovert(clazz: Class<*>){
+    private fun findCovert(clazz: Class<*>) {
         dfsRes.clear()
-        val list = map[clazz]?: emptyList()
+        val list = map[clazz] ?: emptyList()
         list.forEach {
             dfs(it, arrayListOf(), hashSetOf())
         }
-        if(dfsRes.isNotEmpty()){
+        if (dfsRes.isNotEmpty()) {
             lock.write {
                 hashMap[clazz] = Collections.unmodifiableList(dfsRes)
             }
         }
     }
-
 
 
     /**
@@ -100,12 +92,12 @@ class OkkvImpl(
         current: Converter<Any, Any>,
         line: ArrayList<Converter<Any, Any>>,
         set: HashSet<Converter<Any, Any>>
-    ){
-        if(set.contains(current)){
+    ) {
+        if (set.contains(current)) {
             return
         }
-        if(canStore(current.rClazz())){
-            if(dfsRes.isEmpty() || line.size < dfsRes.size) {
+        if (canStore(current.rClazz())) {
+            if (dfsRes.isEmpty() || line.size < dfsRes.size) {
                 line.add(current)
                 dfsRes.clear()
                 dfsRes.addAll(line)
@@ -115,7 +107,7 @@ class OkkvImpl(
         }
         set.add(current)
         line.add(current)
-        val next = map[current.rClazz()]?: emptyList()
+        val next = map[current.rClazz()] ?: emptyList()
         next.forEach {
             dfs(it, line, set)
         }
@@ -123,7 +115,5 @@ class OkkvImpl(
         line.remove(current)
     }
 
-    override fun ignoreException(): Boolean {
-        return ignoreException
-    }
+    override fun ignoreException(): Boolean  = ignoreException
 }

@@ -1,12 +1,10 @@
 package com.heyanle.okkv2.core.store
 
-import java.util.Collections
-
 /**
  * Created by HeYanLe on 2022/5/27 16:01.
  * https://github.com/heyanLE
  */
-abstract class SimpleStore: Store {
+abstract class SimpleStore : Store {
 
     companion object {
         private val STORABLE_SET = setOf(
@@ -20,45 +18,42 @@ abstract class SimpleStore: Store {
             java.lang.Float::class.java,
             Boolean::class.java,
             java.lang.Boolean::class.java,
-            Integer::class.java,)
+            Integer::class.java,
+        )
     }
 
-    override fun canStore(clazz: Class<*>): Boolean {
-        val set = STORABLE_SET
-        val res = set.contains(clazz)
-        return STORABLE_SET.contains(clazz)
-    }
+    override fun canStore(clazz: Class<*>): Boolean = STORABLE_SET.contains(clazz)
 
     override fun <T : Any> set(key: String, clazz: Class<T>, value: T?) {
-        when(clazz){
+        when (clazz) {
             String::class.java -> setString(key, value as String?)
             Double::class.java, java.lang.Double::class.java -> setDouble(key, value as Double?)
-            Int::class.java , Integer::class.java-> setInt(key, value as Int?)
+            Int::class.java, Integer::class.java -> setInt(key, value as Int?)
             Long::class.java, java.lang.Long::class.java -> setLong(key, value as Long?)
             Float::class.java, java.lang.Float::class.java -> setFloat(key, value as Float?)
-            Boolean::class.java , java.lang.Boolean::class.java-> setBoolean(key, value as Boolean?)
+            Boolean::class.java, java.lang.Boolean::class.java -> setBoolean(key, value as Boolean?)
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun <T : Any> get(key: String, clazz: Class<T>): T? {
-        return when(clazz){
+        return when (clazz) {
             String::class.java -> getString(key)
-            Double::class.java, java.lang.Double::class.java  -> getDouble(key)
+            Double::class.java, java.lang.Double::class.java -> getDouble(key)
             Int::class.java, Integer::class.java -> getInt(key)
             Long::class.java, java.lang.Long::class.java -> getLong(key)
             Float::class.java, java.lang.Float::class.java -> getFloat(key)
             Boolean::class.java, java.lang.Boolean::class.java -> getBoolean(key)
             else -> null
-        }as T?
+        } as T?
     }
 
-
-    abstract fun getString(key: String) : String?
-    abstract fun getDouble(key: String) : Double?
-    abstract fun getInt(key: String) : Int?
-    abstract fun getLong(key: String) : Long?
-    abstract fun getFloat(key: String) : Float?
-    abstract fun getBoolean(key: String) : Boolean?
+    abstract fun getString(key: String): String?
+    abstract fun getDouble(key: String): Double?
+    abstract fun getInt(key: String): Int?
+    abstract fun getLong(key: String): Long?
+    abstract fun getFloat(key: String): Float?
+    abstract fun getBoolean(key: String): Boolean?
 
     abstract fun setString(key: String, value: String?)
     abstract fun setDouble(key: String, value: Double?)

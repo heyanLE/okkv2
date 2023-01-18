@@ -1,13 +1,10 @@
 package com.heyanle.okkv2.core
 
-import com.heyanle.okkv2.core.chain.InterceptorChain
-import kotlin.reflect.KProperty
-
 /**
  * Created by HeYanLe on 2022/5/27 14:57.
  * https://github.com/heyanLE
  */
-interface OkkvValue<T: Any> {
+interface OkkvValue<T : Any> {
 
     fun okkv(): Okkv
 
@@ -21,21 +18,17 @@ interface OkkvValue<T: Any> {
 
     fun get(): T?
 
-    fun require(): T {
-        return get() ?: throw NullPointerException("get() return null")
-    }
+    fun require(): T = get() ?: throw NullPointerException("get() return null")
 
     fun set(value: T?)
 
-    fun ignoreException():Boolean?
+    fun ignoreException(): Boolean?
 
-    fun covertLine():String {
-        val stringBuilder  = StringBuilder()
-        stringBuilder.append(clazz().simpleName)
+    fun covertLine() = buildString {
+        append(clazz().simpleName)
         okkv().covertFrom(clazz()).forEach {
-            stringBuilder.append(" -> ").append(it.rClazz().simpleName)
+            append(" -> ").append(it.rClazz().simpleName)
         }
-        return stringBuilder.toString()
     }
 
 }

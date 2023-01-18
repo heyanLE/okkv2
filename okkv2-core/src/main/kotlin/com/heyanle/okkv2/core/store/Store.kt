@@ -10,8 +10,8 @@ interface Store {
 
     fun init()
 
-    fun <T: Any> get(key: String, clazz: Class<T>) : T?
-    fun <T: Any> set(key: String, clazz: Class<T>, value: T?)
+    fun <T : Any> get(key: String, clazz: Class<T>): T?
+    fun <T : Any> set(key: String, clazz: Class<T>, value: T?)
 
     fun remove(key: String)
 }

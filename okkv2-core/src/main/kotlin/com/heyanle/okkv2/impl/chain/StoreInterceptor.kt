@@ -10,13 +10,13 @@ import com.heyanle.okkv2.core.store.Store
  */
 class StoreInterceptor(
     private val store: Store
-): Interceptor() {
+) : Interceptor() {
     override fun <T : Any> get(okkvValue: OkkvValue<T>): T? {
         return store.get(okkvValue.key(), okkvValue.clazz())
     }
 
     override fun <T : Any> set(okkvValue: OkkvValue<T>, value: T?) {
-        if(value == null){
+        if (value == null) {
             store.remove(okkvValue.key())
             return
         }

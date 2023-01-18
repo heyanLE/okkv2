@@ -7,7 +7,7 @@ import com.heyanle.okkv2.core.chain.Interceptor
  * Created by HeYanLe on 2022/5/27 17:51.
  * https://github.com/heyanLE
  */
-abstract  class CatchingInterceptor: Interceptor() {
+abstract class CatchingInterceptor : Interceptor() {
 
     abstract fun onCatching(throwable: Throwable)
 
@@ -16,7 +16,7 @@ abstract  class CatchingInterceptor: Interceptor() {
             next?.get(okkvValue)
         }.getOrElse {
             onCatching(it)
-            if(!(okkvValue.ignoreException()?:okkvValue.okkv().ignoreException())){
+            if (!(okkvValue.ignoreException() ?: okkvValue.okkv().ignoreException())) {
                 throw it
             }
             null
@@ -28,7 +28,7 @@ abstract  class CatchingInterceptor: Interceptor() {
             next?.set(okkvValue, value)
         }.onFailure {
             onCatching(it)
-            if(!(okkvValue.ignoreException()?:okkvValue.okkv().ignoreException())){
+            if (!(okkvValue.ignoreException() ?: okkvValue.okkv().ignoreException())) {
                 throw it
             }
         }

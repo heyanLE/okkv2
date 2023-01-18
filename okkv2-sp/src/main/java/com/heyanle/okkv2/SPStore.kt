@@ -11,7 +11,8 @@ import com.heyanle.okkv2.core.store.SimpleStore
 class SPStore(
     context: Context,
     spName: String
-): SimpleStore() {
+) : SimpleStore() {
+
     private val applicationContext = context.applicationContext
 
     private val sharedPreferences: SharedPreferences by lazy {
@@ -20,6 +21,7 @@ class SPStore(
             Context.MODE_PRIVATE
         )
     }
+
     override fun getString(key: String): String? {
         if (sharedPreferences.contains(key)) {
             return sharedPreferences.getString(key, "")
@@ -63,7 +65,7 @@ class SPStore(
     }
 
     override fun setString(key: String, value: String?) {
-        if(value == null){
+        if (value == null) {
             remove(key)
             return
         }
@@ -71,7 +73,7 @@ class SPStore(
     }
 
     override fun setDouble(key: String, value: Double?) {
-        if(value == null){
+        if (value == null) {
             remove(key)
             return
         }
@@ -79,15 +81,15 @@ class SPStore(
     }
 
     override fun setInt(key: String, value: Int?) {
-        if(value == null){
+        if (value == null) {
             remove(key)
             return
         }
-        sharedPreferences.edit().putInt(key, value?:0).apply()
+        sharedPreferences.edit().putInt(key, value).apply()
     }
 
     override fun setLong(key: String, value: Long?) {
-        if(value == null){
+        if (value == null) {
             remove(key)
             return
         }
@@ -95,7 +97,7 @@ class SPStore(
     }
 
     override fun setFloat(key: String, value: Float?) {
-        if(value == null){
+        if (value == null) {
             remove(key)
             return
         }
@@ -103,18 +105,17 @@ class SPStore(
     }
 
     override fun setBoolean(key: String, value: Boolean?) {
-        if(value == null){
+        if (value == null) {
             remove(key)
             return
         }
         sharedPreferences.edit().putBoolean(key, value).apply()
     }
 
-    override fun init() {
-
-    }
+    override fun init() = Unit
 
     override fun remove(key: String) {
-        sharedPreferences.edit().remove(key)
+        sharedPreferences.edit().remove(key).apply()
     }
+
 }

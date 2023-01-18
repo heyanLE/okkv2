@@ -2,187 +2,90 @@ package com.heyanle.okkv2.core
 
 import com.heyanle.okkv2.core.chain.Interceptor
 import com.heyanle.okkv2.core.store.Store
-import com.heyanle.okkv2.impl.NullableOkkvValueImpl
 import com.heyanle.okkv2.impl.OkkvImpl
-import com.heyanle.okkv2.impl.OkkvValueImpl
 import com.heyanle.okkv2.impl.chain.*
-import java.lang.NullPointerException
 
 /**
  * Created by HeYanLe on 2022/5/27 15:17.
  * https://github.com/heyanLE
  */
-
-fun <T: Any> okkv(
-    key: String,
-    def: T,
-    ignoreException: Boolean? = null,
-    ): OkkvValueImpl<T>{
-    return OkkvValueImpl<T>(
-        okkvFinder = {
-            OkkvDefaultProvider.okkv[OkkvDefaultProvider.DEFAULT_KEY]?:throw Exception("Okkv[${OkkvDefaultProvider.DEFAULT_KEY}] is null")
-        },
-        nullable = false,
-        key = key,
-        clazz = def::class.java,
-        defaultValue = def,
-        ignoreException = ignoreException
-    )
-}
-
-fun <T: Any> Okkv.okkv(key: String, def: T, ignoreException: Boolean? = null): OkkvValueImpl<T>{
-    return OkkvValueImpl<T>(
-        okkvFinder = {
-               this
-        },
-        nullable = false,
-        key = key,
-        clazz = def::class.java,
-        defaultValue = def,
-        ignoreException = ignoreException
-    )
-}
-
-inline fun <reified T: Any > okkv(
-    key: String,
-    ignoreException: Boolean? = null,): NullableOkkvValueImpl<T> {
-    return NullableOkkvValueImpl<T>(
-        okkvFinder = {
-            OkkvDefaultProvider.okkv[OkkvDefaultProvider.DEFAULT_KEY]?:throw Exception("Okkv[${OkkvDefaultProvider.DEFAULT_KEY}] is null")
-        },
-        key = key,
-        clazz = T::class.java,
-        ignoreException = ignoreException
-    )
-}
-
-inline fun <reified T: Any > Okkv.okkv(key: String, ignoreException: Boolean? = null): NullableOkkvValueImpl<T> {
-    return NullableOkkvValueImpl<T>(
-        okkvFinder = {
-            this
-        },
-        key = key,
-        clazz = T::class.java,
-        ignoreException = ignoreException
-    )
-}
-
-
-
-
-object OkkvDefaultProvider {
-    const val DEFAULT_KEY = "DEFAULT"
-    var okkv = HashMap<String, Okkv>()
-
-    fun get(key: String): Okkv{
-        return okkv[key]?: throw Exception("Okkv[${OkkvDefaultProvider.DEFAULT_KEY}] is null")
-    }
-
-    fun def(okkv: Okkv){
-        this.okkv[DEFAULT_KEY]= okkv
-    }
-    fun def(key: String, okkv: Okkv){
-        this.okkv[key] = okkv
-    }
-}
-
 interface Okkv {
 
-    class Builder {
-        var store: Store? = null
-        private var converters  = arrayListOf<Converter<*, *>>()
+    class Builder(val store: Store) {
+
+        private var converters = arrayListOf<Converter<*, *>>()
         var interceptorChains = arrayListOf<Interceptor>()
         var cache: Boolean = false
         private var ignoreException: Boolean = true
-        private var catchingChain : CatchingInterceptor = object: CatchingInterceptor(){
-            override fun onCatching(throwable: Throwable) {
-
-            }
+        private var catchingChain: CatchingInterceptor = object : CatchingInterceptor() {
+            override fun onCatching(throwable: Throwable) = Unit
         }
 
-        fun cache(): Builder {
+        fun cache() = apply {
             cache = true
-            return this
         }
 
-        fun catchingChain(catchingInterceptor: CatchingInterceptor): Builder{
-            catchingChain = catchingInterceptor
-            return this
-        }
-
-        fun cache(boolean: Boolean):Builder{
+        fun cache(boolean: Boolean) = apply {
             cache = boolean
-            return this
         }
 
-        fun store(store: Store): Builder{
-            this.store = store
-            return this
+        fun catchingChain(catchingInterceptor: CatchingInterceptor) = apply {
+            catchingChain = catchingInterceptor
         }
 
-        fun ignoreException(ignore: Boolean): Builder{
+        fun ignoreException(ignore: Boolean) = apply {
             ignoreException = ignore
-            return this
         }
 
-
-        fun addConverter(converter: Converter<*, *>): Builder {
+        fun addConverter(converter: Converter<*, *>) = apply {
             this.converters.add(converter)
-            return this
         }
 
-        fun addInterceptorChain(interceptor: Interceptor):Builder{
+        fun addInterceptorChain(interceptor: Interceptor) = apply {
             this.interceptorChains.add(interceptor)
-            return this
-
         }
 
-        fun build(): Okkv{
+        fun build(): Okkv {
 
-            val list = arrayListOf<Interceptor>()
-            list.add(catchingChain)
-            list.add(ConvertInterceptor())
-
-            if(cache){
-                list.add(CacheInterceptor())
+            val list = buildList<Interceptor> {
+                this += catchingChain
+                this += ConvertInterceptor()
+                if (cache) {
+                    this += CacheInterceptor()
+                }
+                this += interceptorChains
+                this += StoreInterceptor(store)
             }
 
-            list.addAll(interceptorChains)
-
-            val st = store?:throw NullPointerException("store can't be null")
-
-
-            list.add(StoreInterceptor(st))
-
-            val head = HeadInterceptor()
-            var p: Interceptor = head
-            for(chain in list){
-                p.next = chain
-                p = chain
+            val head = HeadInterceptor().also {
+                var p: Interceptor = it
+                for (chain in list) {
+                    p.next = chain
+                    p = chain
+                }
             }
-            return OkkvImpl(head, st, converters, ignoreException)
+
+            return OkkvImpl(head, store, converters, ignoreException)
         }
     }
 
     fun init(): Okkv
 
-    fun canStore(clazz: Class<*>) : Boolean
+    fun canStore(clazz: Class<*>): Boolean
 
-    fun <T: Any> getValue(value: OkkvValue<T>): T?
+    fun <T : Any> getValue(value: OkkvValue<T>): T?
 
-    fun <T: Any> setValue(value: OkkvValue<T>, v: T?)
+    fun <T : Any> setValue(value: OkkvValue<T>, v: T?)
 
-    fun<T: Any> covertFrom(clazz: Class<T>): List<Converter<Any, Any>>
+    fun <T : Any> covertFrom(clazz: Class<T>): List<Converter<Any, Any>>
 
-    fun ignoreException():Boolean
+    fun ignoreException(): Boolean
 
-    fun default(): Okkv{
+    fun default() = apply {
         OkkvDefaultProvider.def(this)
-        return this
     }
 
-    fun default(key: String): Okkv{
-        OkkvDefaultProvider.def(key,this)
-        return this
+    fun default(key: String) = apply {
+        OkkvDefaultProvider.set(key, this)
     }
 }
