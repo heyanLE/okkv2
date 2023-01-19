@@ -22,6 +22,7 @@ class NotnullOkkvValueImpl<T : Any>(
 
     override fun okkv() = okkv
     override fun key() = key
+
     @Suppress("UNCHECKED_CAST")
     override fun clazz() = clazz as Class<T>
     override fun nullable() = false
@@ -39,5 +40,8 @@ class NotnullOkkvValueImpl<T : Any>(
     }
 
     override fun ignoreException() = ignoreException
+
+    operator fun getValue(thisRef: Any?, property: KProperty<*>): T = get()
+    operator fun setValue(thisRef: Any?, property: KProperty<*>, value: T) = set(value)
 
 }
