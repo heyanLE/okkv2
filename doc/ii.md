@@ -11,9 +11,8 @@ class MyApplication: Application {
     
     override fun onCreate(){
         super.onCreate()
-        Okkv.Builder()
-            .store(MMKVStore(this)) // 使用 MMKV 储存
-            //.store(SPStore(this, "my_data"))  使用 SharedPreference 储存
+        Okkv.Builder(MMKVStore(this)) // 使用 MMKV 储存 SPStore(this, "my_data") 使用 SharedPreference 储存
+            //.composeInterceptor() // 如需在compose中使用，则需要添加此拦截器
             .build() // 创建 Okkv 对象
             .init() // 初始化
             .default() // 作为默认
@@ -86,14 +85,12 @@ dataNonnull.set(null) // 抛异常
 class MyApplication: Application {
     
     override fun onCreate() {
-        Okkv.Builder()
-            .store(MMKVStore(this)) // 使用 MMKV 储存
+        Okkv.Builder(MMKVStore(this)) // 使用 MMKV 储存
             .build() // 创建 Okkv 对象
             .init() // 初始化
             .default("mmkv") // 作为默认，key 为 mmkv
 
-        Okkv.Builder()
-            .store(SPStore(this, "my_data")) // 使用 MMKV 储存
+        Okkv.Builder(SPStore(this, "my_data")) // 使用 SharedPreference 储存
             .build() // 创建 Okkv 对象
             .init() // 初始化
             .default("sp") // 作为默认，key 为 sp
