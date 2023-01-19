@@ -63,10 +63,22 @@ operator fun <T : Any> OkkvValue<T>.setValue(thisRef: T?, property: KProperty<*>
     this.set(value)
 }
 
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+operator fun <T : Any> NullableOkkvValueImpl<T>.getValue(thisRef: T?, property: KProperty<*>): T? {
+    return this.get()
+}
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+operator fun <T : Any> NullableOkkvValueImpl<T>.setValue(thisRef: T?, property: KProperty<*>, value: T?) {
+    this.set(value)
+}
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 operator fun <T : Any> NotnullOkkvValueImpl<T>.getValue(thisRef: T?, property: KProperty<*>): T {
     return this.get()
 }
 
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 operator fun <T : Any> NotnullOkkvValueImpl<T>.setValue(thisRef: T?, property: KProperty<*>, value: T) {
     this.set(value)
 }
