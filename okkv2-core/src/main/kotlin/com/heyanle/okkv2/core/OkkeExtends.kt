@@ -48,9 +48,7 @@ inline fun <reified T : Any> Okkv.okkv(
     ignoreException: Boolean? = null
 ): NullableOkkvValueImpl<T> {
     return NullableOkkvValueImpl<T>(
-        okkvFinder = {
-            this
-        },
+        okkvFinder = { this },
         key = key,
         clazz = T::class.java,
         ignoreException = ignoreException
@@ -62,5 +60,13 @@ operator fun <T : Any> OkkvValue<T>.getValue(thisRef: T?, property: KProperty<*>
 }
 
 operator fun <T : Any> OkkvValue<T>.setValue(thisRef: T?, property: KProperty<*>, value: T?) {
+    this.set(value)
+}
+
+operator fun <T : Any> NotnullOkkvValueImpl<T>.getValue(thisRef: T?, property: KProperty<*>): T {
+    return this.get()
+}
+
+operator fun <T : Any> NotnullOkkvValueImpl<T>.setValue(thisRef: T?, property: KProperty<*>, value: T) {
     this.set(value)
 }

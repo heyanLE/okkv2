@@ -28,7 +28,7 @@ class NotnullOkkvValueImpl<T : Any>(
     override fun defaultValue() = defaultValue
 
     override fun get(): T {
-        return okkv.getValue(this)!!
+        return okkv.getValue(this) ?: defaultValue
     }
 
     override fun set(value: T?) {
@@ -40,6 +40,4 @@ class NotnullOkkvValueImpl<T : Any>(
 
     override fun ignoreException() = ignoreException
 
-    operator fun getValue(thisRef: Any?, property: KProperty<*>): T  = get()
-    operator fun setValue(thisRef: Any?, property: KProperty<*>, value: T) = set(value)
 }
