@@ -4,6 +4,9 @@
 
 [使用文档点击这里](https://github.com/heyanLE/okkv2/tree/main/doc/menu.md)
 
+* 1.2.2 2023/1/19  
+支持compose  
+
 * 1.0.7 2022/05/27  
 支持自定义 Store 支持的类型  
 支持多类型的 Covert（采用 DFS 寻找最短路径）  
