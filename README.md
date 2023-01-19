@@ -22,7 +22,8 @@ repositories {
 ```
 
 ```groovy
-implementation 'com.github.heyanLE.okkv2:okkv2-core:1.0.7' // 核心代码
-implementation 'com.github.heyanLE.okkv2:okkv2-sp:1.0.7' // 使用 SharedPreference 储存
-implementation 'com.github.heyanLE.okkv2:okkv2-mmkv:1.0.7' // 使用 MMKV 储存
+implementation 'com.github.heyanLE.okkv2:okkv2-core:1.2.2' // 核心代码
+implementation 'com.github.heyanLE.okkv2:okkv2-sp:1.2.2' // 使用 SharedPreference 储存
+implementation 'com.github.heyanLE.okkv2:okkv2-mmkv:1.2.2' // 使用 MMKV 储存
+implementation 'com.github.heyanLE.okkv2:okkv2-compose:1.2.2' // 使用 Compose 相关的okkvState
 ```
