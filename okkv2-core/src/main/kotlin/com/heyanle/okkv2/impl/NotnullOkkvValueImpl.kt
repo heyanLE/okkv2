@@ -2,7 +2,6 @@ package com.heyanle.okkv2.impl
 
 import com.heyanle.okkv2.core.Okkv
 import com.heyanle.okkv2.core.OkkvValueNotnull
-import kotlin.reflect.KProperty
 
 /**
  * Created by HeYanLe on 2022/5/27 16:29.
@@ -32,16 +31,10 @@ class NotnullOkkvValueImpl<T : Any>(
         return okkv.getValue(this) ?: defaultValue
     }
 
-    override fun set(value: T?) {
-        if (value == null) {
-            error("Can't set null to nonnull okkv value")
-        }
+    override fun set(value: T) {
         okkv.setValue(this, value)
     }
 
     override fun ignoreException() = ignoreException
-
-    operator fun getValue(thisRef: Any?, property: KProperty<*>): T = get()
-    operator fun setValue(thisRef: Any?, property: KProperty<*>, value: T) = set(value)
 
 }

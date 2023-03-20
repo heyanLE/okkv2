@@ -1,5 +1,7 @@
 package com.heyanle.okkv2.core
 
+import kotlin.reflect.KProperty
+
 /**
  * Created by HeYanLe on 2022/5/27 14:57.
  * https://github.com/heyanLE
@@ -28,5 +30,9 @@ interface OkkvValue<T : Any> {
         append(clazz().simpleName)
         append(" -> ").append(okkv().covertFrom(clazz()))
     }
+
+    operator fun getValue(thisRef: Any?, property: KProperty<*>): T? = get()
+
+    operator fun setValue(thisRef: Any?, property: KProperty<*>, value: T?) = set(value)
 
 }

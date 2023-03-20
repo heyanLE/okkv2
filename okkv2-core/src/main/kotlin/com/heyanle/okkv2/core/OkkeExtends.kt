@@ -2,7 +2,6 @@ package com.heyanle.okkv2.core
 
 import com.heyanle.okkv2.impl.NotnullOkkvValueImpl
 import com.heyanle.okkv2.impl.NullableOkkvValueImpl
-import kotlin.reflect.KProperty
 
 /**
  * Created by LoliBall on 2023/1/18 21:42.
@@ -52,19 +51,3 @@ inline fun <reified T : Any> Okkv.okkv(
     clazz = T::class.java,
     ignoreException = ignoreException
 )
-
-operator fun <T : Any> OkkvValue<T>.getValue(ref: Any?, property: KProperty<*>): T? {
-    return this.get()
-}
-
-operator fun <T : Any> OkkvValue<T>.setValue(ref: Any?, property: KProperty<*>, value: T?) {
-    this.set(value)
-}
-
-operator fun <T : Any> OkkvValueNotnull<T>.getValue(ref: Any?, property: KProperty<*>): T {
-    return this.get()
-}
-
-operator fun <T : Any> OkkvValueNotnull<T>.setValue(ref: Any?, property: KProperty<*>, value: T) {
-    this.set(value)
-}
