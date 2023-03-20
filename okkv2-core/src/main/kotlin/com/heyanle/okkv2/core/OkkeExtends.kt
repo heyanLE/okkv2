@@ -53,22 +53,18 @@ inline fun <reified T : Any> Okkv.okkv(
     ignoreException = ignoreException
 )
 
-operator fun <T : Any> OkkvValue<T>.getValue(thisRef: T?, property: KProperty<*>): T? {
+operator fun <T : Any> OkkvValue<T>.getValue(ref: Any?, property: KProperty<*>): T? {
     return this.get()
 }
 
-operator fun <T : Any> OkkvValue<T>.setValue(thisRef: T?, property: KProperty<*>, value: T?) {
+operator fun <T : Any> OkkvValue<T>.setValue(ref: Any?, property: KProperty<*>, value: T?) {
     this.set(value)
 }
 
-operator fun <T : Any> OkkvValueNotnull<T>.getValue(thisRef: T?, property: KProperty<*>): T {
+operator fun <T : Any> OkkvValueNotnull<T>.getValue(ref: Any?, property: KProperty<*>): T {
     return this.get()
 }
 
-operator fun <T : Any> OkkvValueNotnull<T>.setValue(
-    thisRef: T?,
-    property: KProperty<*>,
-    value: T
-) {
+operator fun <T : Any> OkkvValueNotnull<T>.setValue(ref: Any?, property: KProperty<*>, value: T) {
     this.set(value)
 }
