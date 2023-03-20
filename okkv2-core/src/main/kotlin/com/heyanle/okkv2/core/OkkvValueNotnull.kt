@@ -16,13 +16,11 @@ interface OkkvValueNotnull<T : Any> : OkkvValue<T> {
         if (value == null) {
             error("Can't set null to nonnull okkv value")
         }
-        set(value)
+        setNotnull(value)
     }
 
-    fun set(value: T)
+    fun setNotnull(value: T)
 
     override operator fun getValue(thisRef: Any?, property: KProperty<*>): T = get()
-
-    operator fun setValue(thisRef: Any?, property: KProperty<*>, value: T) = set(value)
 
 }

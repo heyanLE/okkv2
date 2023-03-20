@@ -31,7 +31,7 @@ class NotnullOkkvValueImpl<T : Any>(
         return okkv.getValue(this) ?: defaultValue
     }
 
-    override fun set(value: T) {
+    override fun setNotnull(value: T) {
         okkv.setValue(this, value)
     }
 
