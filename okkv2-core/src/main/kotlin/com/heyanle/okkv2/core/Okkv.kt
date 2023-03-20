@@ -2,6 +2,7 @@ package com.heyanle.okkv2.core
 
 import com.heyanle.okkv2.core.chain.Interceptor
 import com.heyanle.okkv2.core.store.Store
+import com.heyanle.okkv2.impl.EmptyConvert
 import com.heyanle.okkv2.impl.OkkvImpl
 import com.heyanle.okkv2.impl.chain.*
 
@@ -13,7 +14,8 @@ interface Okkv {
 
     class Builder(val store: Store) {
 
-        private var converters = arrayListOf<Converter<*, *>>()
+        var converters = mutableMapOf<Class<*>, ConverterBean<*, *>>()
+        private var fallbackConverter: Converter<Any, String> = EmptyConvert()
         var interceptorChains = arrayListOf<Interceptor>()
         var cache: Boolean = false
         private var ignoreException: Boolean = true
@@ -37,11 +39,15 @@ interface Okkv {
             ignoreException = ignore
         }
 
-        fun addConverter(converter: Converter<*, *>) = apply {
-            this.converters.add(converter)
+        inline fun <reified T : Any, reified R : Any> converter(cov: Converter<T, R>) = apply {
+            converters[T::class.java] = ConverterBean(T::class.java, R::class.java, cov)
         }
 
-        fun addInterceptorChain(interceptor: Interceptor) = apply {
+        fun fallbackConverter(cov: Converter<Any, String>) = apply {
+            fallbackConverter = cov
+        }
+
+        fun interceptor(interceptor: Interceptor) = apply {
             this.interceptorChains.add(interceptor)
         }
 
@@ -65,7 +71,7 @@ interface Okkv {
                 }
             }
 
-            return OkkvImpl(head, store, converters, ignoreException)
+            return OkkvImpl(head, store, converters, fallbackConverter, ignoreException)
         }
     }
 
@@ -77,7 +83,9 @@ interface Okkv {
 
     fun <T : Any> setValue(value: OkkvValue<T>, v: T?)
 
-    fun <T : Any> covertFrom(clazz: Class<T>): List<Converter<Any, Any>>
+    fun <T : Any> covertFrom(clazz: Class<T>): ConverterBean<Any, Any>?
+
+    val fallbackConverter: Converter<Any, String>
 
     fun ignoreException(): Boolean
 

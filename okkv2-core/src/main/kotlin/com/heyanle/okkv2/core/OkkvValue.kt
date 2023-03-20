@@ -26,9 +26,7 @@ interface OkkvValue<T : Any> {
 
     fun covertLine() = buildString {
         append(clazz().simpleName)
-        okkv().covertFrom(clazz()).forEach {
-            append(" -> ").append(it.rClazz().simpleName)
-        }
+        append(" -> ").append(okkv().covertFrom(clazz()))
     }
 
 }

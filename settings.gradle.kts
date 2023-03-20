@@ -1,4 +1,7 @@
 @file:Suppress("UnstableApiUsage")
+
+include(":okkv2-serialization")
+
 pluginManagement {
     repositories {
         gradlePluginPortal()

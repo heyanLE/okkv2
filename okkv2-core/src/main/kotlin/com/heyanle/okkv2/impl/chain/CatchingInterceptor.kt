@@ -14,6 +14,8 @@ abstract class CatchingInterceptor : Interceptor() {
     override fun <T : Any> get(okkvValue: OkkvValue<T>): T? {
         return runCatching {
             next?.get(okkvValue)
+        }.onFailure {
+            it.printStackTrace()
         }.getOrElse {
             onCatching(it)
             if (!(okkvValue.ignoreException() ?: okkvValue.okkv().ignoreException())) {
@@ -27,6 +29,7 @@ abstract class CatchingInterceptor : Interceptor() {
         runCatching {
             next?.set(okkvValue, value)
         }.onFailure {
+            it.printStackTrace()
             onCatching(it)
             if (!(okkvValue.ignoreException() ?: okkvValue.okkv().ignoreException())) {
                 throw it

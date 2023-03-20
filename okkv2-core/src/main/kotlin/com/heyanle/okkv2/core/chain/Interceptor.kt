@@ -6,6 +6,4 @@ package com.heyanle.okkv2.core.chain
  */
 abstract class Interceptor(
     var next: Interceptor? = null
-) : InterceptorChain {
-
-}
+) : InterceptorChain

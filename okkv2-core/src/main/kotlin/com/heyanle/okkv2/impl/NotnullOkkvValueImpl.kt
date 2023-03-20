@@ -1,7 +1,7 @@
 package com.heyanle.okkv2.impl
 
 import com.heyanle.okkv2.core.Okkv
-import com.heyanle.okkv2.core.OkkvValue
+import com.heyanle.okkv2.core.OkkvValueNotnull
 import kotlin.reflect.KProperty
 
 /**
@@ -14,7 +14,7 @@ class NotnullOkkvValueImpl<T : Any>(
     private val clazz: Class<*>,
     private val defaultValue: T,
     private val ignoreException: Boolean? = true,
-) : OkkvValue<T> {
+) : OkkvValueNotnull<T> {
 
     private val okkv: Okkv by lazy {
         okkvFinder()

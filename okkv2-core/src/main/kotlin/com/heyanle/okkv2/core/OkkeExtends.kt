@@ -13,7 +13,7 @@ fun <T : Any> okkv(
     key: String,
     def: T,
     ignoreException: Boolean? = null,
-) = NotnullOkkvValueImpl<T>(
+): OkkvValueNotnull<T> = NotnullOkkvValueImpl<T>(
     okkvFinder = { OkkvDefaultProvider.def() },
     key = key,
     clazz = def::class.java,
@@ -25,7 +25,7 @@ fun <T : Any> Okkv.okkv(
     key: String,
     def: T,
     ignoreException: Boolean? = null
-) = NotnullOkkvValueImpl<T>(
+): OkkvValueNotnull<T> = NotnullOkkvValueImpl<T>(
     okkvFinder = { this },
     key = key,
     clazz = def::class.java,
@@ -36,7 +36,7 @@ fun <T : Any> Okkv.okkv(
 inline fun <reified T : Any> okkv(
     key: String,
     ignoreException: Boolean? = null,
-) = NullableOkkvValueImpl<T>(
+): OkkvValue<T> = NullableOkkvValueImpl<T>(
     okkvFinder = { OkkvDefaultProvider.def() },
     key = key,
     clazz = T::class.java,
@@ -46,14 +46,12 @@ inline fun <reified T : Any> okkv(
 inline fun <reified T : Any> Okkv.okkv(
     key: String,
     ignoreException: Boolean? = null
-): NullableOkkvValueImpl<T> {
-    return NullableOkkvValueImpl<T>(
-        okkvFinder = { this },
-        key = key,
-        clazz = T::class.java,
-        ignoreException = ignoreException
-    )
-}
+): OkkvValue<T> = NullableOkkvValueImpl<T>(
+    okkvFinder = { this },
+    key = key,
+    clazz = T::class.java,
+    ignoreException = ignoreException
+)
 
 operator fun <T : Any> OkkvValue<T>.getValue(thisRef: T?, property: KProperty<*>): T? {
     return this.get()
@@ -63,22 +61,14 @@ operator fun <T : Any> OkkvValue<T>.setValue(thisRef: T?, property: KProperty<*>
     this.set(value)
 }
 
-@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-operator fun <T : Any> NullableOkkvValueImpl<T>.getValue(thisRef: T?, property: KProperty<*>): T? {
+operator fun <T : Any> OkkvValueNotnull<T>.getValue(thisRef: T?, property: KProperty<*>): T {
     return this.get()
 }
 
-@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-operator fun <T : Any> NullableOkkvValueImpl<T>.setValue(thisRef: T?, property: KProperty<*>, value: T?) {
-    this.set(value)
-}
-
-@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-operator fun <T : Any> NotnullOkkvValueImpl<T>.getValue(thisRef: T?, property: KProperty<*>): T {
-    return this.get()
-}
-
-@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-operator fun <T : Any> NotnullOkkvValueImpl<T>.setValue(thisRef: T?, property: KProperty<*>, value: T) {
+operator fun <T : Any> OkkvValueNotnull<T>.setValue(
+    thisRef: T?,
+    property: KProperty<*>,
+    value: T
+) {
     this.set(value)
 }

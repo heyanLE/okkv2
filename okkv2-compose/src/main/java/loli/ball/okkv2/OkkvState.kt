@@ -44,5 +44,5 @@ fun <T : Any> NotnullOkkvValueImpl<T>.observeAsState(): State<T> {
 }
 
 fun Okkv.Builder.composeInterceptor() = apply {
-    addInterceptorChain(OkkvComposeInterceptor)
+    interceptor(OkkvComposeInterceptor)
 }

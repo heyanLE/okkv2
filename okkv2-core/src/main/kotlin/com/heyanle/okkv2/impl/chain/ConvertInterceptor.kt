@@ -11,39 +11,56 @@ import com.heyanle.okkv2.impl.NullableOkkvValueImpl
  */
 class ConvertInterceptor(
 ) : Interceptor() {
+
+    @Suppress("UNCHECKED_CAST")
     override fun <T : Any> get(okkvValue: OkkvValue<T>): T? {
         val nextInterceptor = next
         if (nextInterceptor == null) throw Exception("ConvertInterceptor as last interceptor")
-        if (okkvValue.okkv().canStore(okkvValue.clazz())) {
+        val okkv = okkvValue.okkv()
+        val clazz = okkvValue.clazz()
+        if (okkv.canStore(clazz)) {
             return nextInterceptor.get(okkvValue)
         }
-        val convertList = okkvValue.okkv().covertFrom(okkvValue.clazz())
-        if (convertList.isEmpty()) {
-            throw Exception("Can't convert type ${okkvValue.clazz().simpleName} to storable type")
+        val convert = okkv.covertFrom(clazz)
+        if (convert != null) {
+            var res: Any? = nextInterceptor.get(newOkkvValue(convert.to, okkvValue))
+            if (res != null) {
+                res = convert.converter.deserialize(res, clazz as Class<Any>)
+            }
+            return res as T?
+        } else {
+            var res: Any? = nextInterceptor.get(newOkkvValue(String::class.java, okkvValue))
+            if (res is String) {
+                res = okkv.fallbackConverter.deserialize(res, clazz as Class<Any>)
+            }
+            return res as T?
         }
-        var res: Any? = nextInterceptor.get(newOkkvValue(convertList.last().rClazz(), okkvValue))
-        for (i in convertList.size - 1 downTo 0) {
-            res = convertList[i].convertFrom(res)
-        }
-        @Suppress("UNCHECKED_CAST")
-        return res as T?
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun <T : Any> set(okkvValue: OkkvValue<T>, value: T?) {
-        var res: Any? = value
-        if (okkvValue.okkv().canStore(okkvValue.clazz())) {
-            next?.set(okkvValue, value)
+        val nextInterceptor = next
+        if (nextInterceptor == null) throw Exception("ConvertInterceptor as last interceptor")
+        val okkv = okkvValue.okkv()
+        val clazz = okkvValue.clazz()
+        if (okkv.canStore(clazz)) {
+            nextInterceptor.set(okkvValue, value)
             return
         }
-        val convertList = okkvValue.okkv().covertFrom(okkvValue.clazz())
-        if (convertList.isEmpty()) {
-            throw Exception("Can't convert type ${okkvValue.clazz().simpleName} to storable type")
+        val convert = okkv.covertFrom(clazz)
+        if (convert != null) {
+            var res: Any? = value
+            if (res != null) {
+                res = convert.converter.serialize(res, clazz as Class<Any>)
+            }
+            nextInterceptor.set(newOkkvValue(convert.to, okkvValue), res)
+        } else {
+            var res: Any? = value
+            if (res != null) {
+                res = okkv.fallbackConverter.serialize(res, clazz as Class<Any>)
+            }
+            nextInterceptor.set(newOkkvValue(String::class.java, okkvValue), res)
         }
-        for (i in convertList.indices) {
-            res = convertList[i].convertTo(res)
-        }
-        next?.set<Any>(newOkkvValue(convertList.last().rClazz(), okkvValue), res)
-            ?: throw Exception("ConvertInterceptor as last interceptor")
     }
 
     private fun newOkkvValue(clazz: Class<*>, okkvValue: OkkvValue<*>): OkkvValue<Any> {
@@ -62,4 +79,5 @@ class ConvertInterceptor(
             )
         }
     }
+
 }
